@@ -4,43 +4,34 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RoderCADUI.ViewModel"
+        xmlns:local1="clr-namespace:FramWpf.Models"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <local:LineListVM x:Key="VM"/>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
             <RowDefinition Height="14*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-
-        <ItemsControl x:Name="Control1" ItemsSource="{Binding lineListVM}" Margin="10,10.2,9.6,9.6" Grid.Row="1">
+        <ItemsControl x:Name="Control1" ItemsSource="{Binding lineList, Mode=OneWay}" Margin="10,10.2,9.6,9.6" Grid.Row="1">
             <ItemsControl.DataContext>
-                <local:LineListVM/>
+                <local1:RoderLineList/>
             </ItemsControl.DataContext>
             <ItemsControl.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding LeftClick}"/>
             </ItemsControl.InputBindings>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas x:Name="WorkSpace" Background="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown">
-                    </Canvas>
+                    <Canvas x:Name="WorkSpace" Background="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <!--<ItemsControl.ItemTemplate>
+            <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Line Fill="{Binding lineListVM, Converter={StaticResource VM}}" Width="25" Height="25" />
+                    <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y}"
+                      X2="{Binding EndPoint.X}" Y2="{Binding EndPoint.Y}"
+                      Stroke="{Binding Brush}" StrokeThickness="3"/>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>-->
-            <!-- пригодится чуть позже
-            <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Canvas.Top" Value="{Binding Path=Y}" />
-                        <Setter Property="Canvas.Left" Value="{Binding Path=X}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>-->
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
 </Window>

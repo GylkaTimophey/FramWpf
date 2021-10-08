@@ -25,6 +25,7 @@ namespace FramWpf {
         }
 
         private void WorkSpace_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
+            var A = Control1;
         }
     }
 }

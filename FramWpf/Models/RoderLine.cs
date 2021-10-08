@@ -22,7 +22,7 @@ namespace RoderCADUI.Model {
         internal RoderLine() {
             Id = count++;
         }
-        internal RoderLine(Point startPoint, Point endPoint, Brush brush) {
+        public RoderLine(Point startPoint, Point endPoint, Brush brush) {
             StartPoint = startPoint;
             EndPoint = endPoint;
             Brush = brush;
@@ -30,7 +30,7 @@ namespace RoderCADUI.Model {
         }
 
         private Point startPoint;
-        internal Point StartPoint {
+        public Point StartPoint {
             get {
                 return startPoint;
             }
@@ -40,7 +40,7 @@ namespace RoderCADUI.Model {
             }
         }
         private Point endPoint;
-        internal Point EndPoint {
+        public Point EndPoint {
             get {
                 return endPoint;
             }
@@ -50,7 +50,7 @@ namespace RoderCADUI.Model {
             }
         }
         private Brush brush;
-        internal Brush Brush {
+        public Brush Brush {
             get {
                 return brush;
             }

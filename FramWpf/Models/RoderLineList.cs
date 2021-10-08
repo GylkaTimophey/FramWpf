@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
 using RoderCADUI.Model;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,26 @@ using System.Windows.Media;
 
 namespace FramWpf.Models {
     class RoderLineList : BindableBase {
-        internal ObservableCollection<RoderLine> lineList;
+        public ObservableCollection<RoderLine> lineList {
+            get; set;
+        }
+        public DelegateCommand LeftClick {
+            get; set;
+        }
         public RoderLineList() {
             lineList = new ObservableCollection<RoderLine>();
-            lineList.Add(new RoderLine(new Point(14, 67), new Point(12,67), Brushes.DarkGreen));
-            lineList.Add(new RoderLine(new Point(23, 78), new Point(23, 78), Brushes.DarkGreen));
-            lineList.Add(new RoderLine(new Point(34, 89), new Point(34, 89), Brushes.DarkGreen));
-            lineList.Add(new RoderLine(new Point(45, 90), new Point(45, 90), Brushes.DarkGreen));
-            lineList.Add(new RoderLine(new Point(56, 123), new Point(56, 123), Brushes.DarkGreen));
+            LeftClick = new DelegateCommand(AddLines);
+            lineList.Add(new RoderLine(new Point(250, 250), new Point(400, 250), Brushes.Red));
+            lineList.Add(new RoderLine(new Point(50, 50), new Point(0, 50), Brushes.Black));
+            lineList.Add(new RoderLine(new Point(100, 100), new Point(0, 100), Brushes.Violet));
+            lineList.Add(new RoderLine(new Point(150, 150), new Point(0, 150), Brushes.Blue));
+            lineList.Add(new RoderLine(new Point(200, 200), new Point(0, 200), Brushes.DarkGreen));
+        }
+        double a, b;
+        internal void AddLines() {
+            lineList.Add(new RoderLine(new Point(0, 0), new Point(a * a, b), Brushes.Red));
+            a += 1;
+            b += 10;
         }
     }
 }
