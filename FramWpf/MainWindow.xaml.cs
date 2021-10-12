@@ -1,4 +1,5 @@
-﻿using RoderCADUI.ViewModel;
+﻿using FramWpf.ViewModel;
+using FramWpf.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,18 @@ namespace FramWpf {
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        public Point MousePosition;
         public MainWindow() {
             InitializeComponent();
-            
         }
 
         private void WorkSpace_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
             var A = Control1;
+        }
+
+        private void WorkSpace_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            MousePosition = Mouse.GetPosition((IInputElement)sender);
+            //Control1.DataContext.LineList.Add(new RoderLine());
         }
     }
 }

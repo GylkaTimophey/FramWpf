@@ -10,23 +10,28 @@ using Prism.Mvvm;
 using Prism.Commands;
 using System.ComponentModel;
 
-namespace RoderCADUI.Model {
+namespace FramWpf.Model {
     internal class RoderLine : BindableBase {
 
         private event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName) {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        static int count = 0;
-        static int Id;
+
+        private static int count = 0;
+        public int Id {
+            get;
+        }
         internal RoderLine() {
             Id = count++;
         }
-        public RoderLine(Point startPoint, Point endPoint, Brush brush) {
+        public RoderLine(Point startPoint, Point endPoint, Brush brush, bool nextID = true) {
             StartPoint = startPoint;
             EndPoint = endPoint;
             Brush = brush;
-            Id = count++;
+            if (nextID) {
+                Id = count++;
+            }
         }
 
         private Point startPoint;
