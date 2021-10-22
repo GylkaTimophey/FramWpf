@@ -59,6 +59,11 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -80,11 +85,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\Class1.cs" />
     <Compile Include="ViewModels\MouseBehaviour.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\RoderLineList.cs" />
-    <Compile Include="Models\RoderLine.cs" />
+    <Compile Include="ViewModels\ShapesVM.cs" />
+    <Compile Include="ViewModels\ShapesInfo.cs" />
     <Compile Include="ViewModels\CursorPosition.cs" />
+    <Compile Include="ViewModels\ToolBarControls.cs" />
+    <Compile Include="ViewModels\UserEventHandler.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -124,6 +132,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Pictures\1.jpg" />
+    <Resource Include="Pictures\Clear.png" />
+    <Resource Include="Pictures\Line.png" />
+    <Resource Include="Pictures\Move.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

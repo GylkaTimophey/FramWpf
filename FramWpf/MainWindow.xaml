@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FramWpf.ViewModel"
+        xmlns:local1="clr-namespace:FramWpf.Model"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
@@ -13,36 +14,69 @@
             <RowDefinition Height="14*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
+        <Grid Margin="10,10,9.6,4.8">
+            <ToolBarTray>
+                <ToolBar>
+                    <ToggleButton Name="MoveButton" IsChecked="{Binding MouseBehaviour.IsMoveChecked}">
+                        <ToggleButton.Content>
+                            <Image Source="./Pictures/Move.png" Stretch="UniformToFill" Width="25" Height="25"/>
+                        </ToggleButton.Content>
+                    </ToggleButton>
+                    <ToggleButton Name="LineButton" IsChecked="{Binding MouseBehaviour.IsLineChecked}">
+                        <Image Source="./Pictures/Line.png" Stretch="UniformToFill" Width="25" Height="25"/>
+                    </ToggleButton>
+                    <Button Name="Clear" Command="{Binding MouseBehaviour.ClearButton}">
+                        <Image Source="./Pictures/Clear.png" Stretch="UniformToFill" Width="25" Height="25"/>
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </Grid>
+        <!--<Line X2="400" Stroke="Brown" StrokeThickness="12"/>-->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10.4,9.6,10" Grid.Row="2">
-            <TextBlock Text="{Binding PanelX, StringFormat='X={0}'}" Margin="0,0,0,-0.4" Width="86" />
-            <TextBlock Text="{Binding PanelY, StringFormat='y={0}'}" Margin="0,0,0,-0.4" Width="119" />
+            <TextBlock Text="{Binding CursorPosition.PanelX, StringFormat='X={0}'}" Margin="0,0,0,-0.4" Width="86" />
+            <TextBlock Text="{Binding CursorPosition.PanelY, StringFormat='y={0}'}" Margin="0,0,0,-0.4" Width="119" />
         </StackPanel>
-        <ItemsControl x:Name="Control1" ItemsSource="{Binding LineList}" Margin="10,10.2,9.6,9.6" Grid.Row="1" Opacity="0.5">
-            
-            <!--<ItemsControl.InputBindings>
-                <MouseBinding Gesture="LeftClick" Command="{Binding LeftClick}"/>
-            </ItemsControl.InputBindings>-->
+        <ItemsControl x:Name="Control1" ItemsSource="{Binding ShapesVM.ShapesInfoList}" Margin="10,0.2,9.6,9.6" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" >
+            <ItemsControl.InputBindings>
+                <MouseBinding Gesture="LeftClick" Command="{Binding MouseBehaviour.LeftClick}"/>
+                <KeyBinding Gesture="CTRL+Z" Command="{Binding MouseBehaviour.BackStep}"/>
+            </ItemsControl.InputBindings>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas x:Name="WorkSpace" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown" Opacity="0.5">
+                    <Canvas x:Name="WorkSpace" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown" Opacity="1">
+                        <Canvas.Background>
+                            <ImageBrush ImageSource="./Pictures/1.jpg" Stretch="UniformToFill" Opacity="0.6" />
+                        </Canvas.Background>
                         <i:Interaction.Behaviors>
-                            <local:MouseBehaviour MouseX="{Binding PanelX, Mode=OneWayToSource}"
-                                          MouseY="{Binding PanelY, Mode=OneWayToSource}" />
+                            <local:MouseBehaviour MouseX="{Binding CursorPosition.PanelX, Mode=OneWayToSource}"
+                                          MouseY="{Binding CursorPosition.PanelY, Mode=OneWayToSource}" />
                         </i:Interaction.Behaviors>
                         <!--<Canvas.DataContext>
                             <local:MainWindowViewModel/>
                         </Canvas.DataContext>-->
                     </Canvas>
-                    
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <!--<ItemsControl.ItemTemplate>
-                <DataTemplate>
+            <ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type local:EllipseInfo}">
+                    <Ellipse Height="{Binding radius}" Width="{Binding radius}" StrokeThickness="3" Fill="{Binding brush}" Margin="{Binding margin}" Cursor="Hand" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type local:LineInfo}">
                     <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y}"
                       X2="{Binding EndPoint.X}" Y2="{Binding EndPoint.Y}"
-                      Stroke="{Binding Brush}" StrokeThickness="1"/>
+                      Stroke="{Binding Brush}" StrokeThickness="3" MouseDown="Line_MouseDown" Uid="{Binding Id}" Cursor="Hand"/>
+                </DataTemplate>
+            </ItemsControl.Resources>
+            <!--<ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding RoderLine.StartPoint.X}" Y1="{Binding RoderLine.StartPoint.Y}"
+                      X2="{Binding RoderLine.EndPoint.X}" Y2="{Binding RoderLine.EndPoint.Y}"
+                      Stroke="{Binding RoderLine.Brush}" StrokeThickness="3"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>-->
         </ItemsControl>
     </Grid>
+    <Window.InputBindings>
+        <KeyBinding Gesture="CTRL+Z" Command="{Binding MouseBehaviour.BackStep}"/>
+    </Window.InputBindings>
 </Window>

@@ -20,7 +20,6 @@ namespace FramWpf {
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public Point MousePosition;
         public MainWindow() {
             InitializeComponent();
         }
@@ -29,9 +28,13 @@ namespace FramWpf {
             var A = Control1;
         }
 
-        private void WorkSpace_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-            MousePosition = Mouse.GetPosition((IInputElement)sender);
-            //Control1.DataContext.LineList.Add(new RoderLine());
+
+        private void Line_MouseDown(object sender, MouseButtonEventArgs e) {
+            ToolBarControls.LineMoving(sender);
+        }
+
+        private void Ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            ToolBarControls.NodeMoving(sender);
         }
     }
 }

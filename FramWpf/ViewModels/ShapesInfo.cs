@@ -9,23 +9,21 @@ using System.Windows.Shapes;
 using Prism.Mvvm;
 using Prism.Commands;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
-namespace FramWpf.Model {
-    internal class RoderLine : BindableBase {
-
-        private event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName) {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private static int count = 0;
+namespace FramWpf.ViewModel {
+    public class ShapesInfo : BindableBase {
+        internal static int count = 1;
         public int Id {
-            get;
+            get; set;
         }
-        internal RoderLine() {
+    }
+    public class LineInfo : ShapesInfo {
+        #region constructors
+        internal LineInfo() {
             Id = count++;
         }
-        public RoderLine(Point startPoint, Point endPoint, Brush brush, bool nextID = true) {
+        public LineInfo(Point startPoint, Point endPoint, Brush brush, bool nextID = true) {
             StartPoint = startPoint;
             EndPoint = endPoint;
             Brush = brush;
@@ -33,7 +31,20 @@ namespace FramWpf.Model {
                 Id = count++;
             }
         }
-
+        public LineInfo(Point startPoint, Point endPoint, Brush brush, int id) {
+            StartPoint = startPoint;
+            EndPoint = endPoint;
+            Brush = brush;
+            Id = id;
+        }
+        public LineInfo(LineInfo info) {
+            StartPoint = info.StartPoint;
+            EndPoint = info.EndPoint;
+            Id = info.Id;
+            Brush = info.Brush;
+        }
+        #endregion
+        #region properties
         private Point startPoint;
         public Point StartPoint {
             get {
@@ -41,7 +52,6 @@ namespace FramWpf.Model {
             }
             set {
                 startPoint = value;
-                OnPropertyChanged("roderLine");
             }
         }
         private Point endPoint;
@@ -51,7 +61,6 @@ namespace FramWpf.Model {
             }
             set {
                 endPoint = value;
-                OnPropertyChanged("roderLine");
             }
         }
         private Brush brush;
@@ -61,8 +70,21 @@ namespace FramWpf.Model {
             }
             set {
                 brush = value;
-                OnPropertyChanged("roderLine");
             }
         }
+        #endregion
+    }
+    public class EllipseInfo : ShapesInfo {
+        #region properties
+        public double radius {
+            get; set;
+        }
+        public Brush brush {
+            get; set;
+        }
+        public Thickness margin {
+            get; set;
+        }
+        #endregion
     }
 }
