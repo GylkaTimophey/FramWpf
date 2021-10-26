@@ -8,13 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace FramWpf.Model {
     class Class1 : BindableBase {
-        public static ObservableCollection<ShapesInfo> myValues;
+        public static ObservableCollection<ShapeInfo> myValues;
         public Class1() {
-            List<ShapesInfo> list = new List<ShapesInfo>(200);
-            myValues = new ObservableCollection<ShapesInfo>(list);
+            myValues = new ObservableCollection<ShapeInfo>();
         }
         private Point startPoint;
         public Point StartPoint {

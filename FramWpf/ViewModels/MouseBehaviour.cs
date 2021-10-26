@@ -16,7 +16,11 @@ using System.Windows.Shapes;
 
 namespace FramWpf.ViewModel {
     public class MouseBehaviour : Behavior<Panel> {
-        #region DependencyProperty
+        #region adding
+        private static void NotifyStaticPropertyChanged(string propertyName) {
+            if (StaticPropertyChanged != null)
+                StaticPropertyChanged(null, new PropertyChangedEventArgs(propertyName));
+        }
         public static readonly DependencyProperty MouseYProperty = DependencyProperty.Register(
            "MouseY", typeof(double), typeof(MouseBehaviour), new PropertyMetadata(default(double)));
 
@@ -71,10 +75,6 @@ namespace FramWpf.ViewModel {
             }
         }
 
-        private static void NotifyStaticPropertyChanged(string propertyName) {
-            if (StaticPropertyChanged != null)
-                StaticPropertyChanged(null, new PropertyChangedEventArgs(propertyName));
-        }
         public double MouseY {
             get {
                 return (double)GetValue(MouseYProperty);
@@ -105,44 +105,22 @@ namespace FramWpf.ViewModel {
                 ToolBarControls.NodeCheck(position);
             }
             if (ToolBarControls.endDrawing) {
-                ShapesVM.ShapesInfoList[ToolBarControls.currentLineInfo.Id]
-                    = new LineInfo(
-                        ToolBarControls.currentLineInfo.StartPoint,
-                        position,
-                        Brushes.Red,
-                        false);
+                ((LineInfo)ShapesVM.ShapesInfoList[ToolBarControls.currentLineInfo.Id]).EndPoint = position;
             }
             if (IsMoveChecked && ToolBarControls.endLineMoving) {
-                ShapesVM.ShapesInfoList[ToolBarControls.currentId]
-                    = new LineInfo(
-                        new Point(position.X - ToolBarControls.startDiff.X, position.Y - ToolBarControls.startDiff.Y),
-                        new Point(position.X - ToolBarControls.endDiff.X, position.Y - ToolBarControls.endDiff.Y),
-                        Brushes.Green,
-                        ToolBarControls.currentId);
+                ((LineInfo)ShapesVM.ShapesInfoList[ToolBarControls.currentId]).StartPoint = new Point(position.X - ToolBarControls.startDiff.X, position.Y - ToolBarControls.startDiff.Y);
+                ((LineInfo)ShapesVM.ShapesInfoList[ToolBarControls.currentId]).EndPoint = new Point(position.X - ToolBarControls.endDiff.X, position.Y - ToolBarControls.endDiff.Y);
+                ((LineInfo)ShapesVM.ShapesInfoList[ToolBarControls.currentId]).Brush = Brushes.Green;
             }
             if (IsMoveChecked && ToolBarControls.endNodeMoving) {
-                ShapesVM.ShapesInfoList.Add( new EllipseInfo() {
-                    radius = ShapesVM.radius,
-                    margin = new Thickness(position.X - ShapesVM.radius / 2, position.Y - ShapesVM.radius / 2, 0, 0),
-                    brush = Brushes.Gold
-                });
+                ShapesVM.ShapesInfoList[0] = (new EllipseInfo(ShapesVM.EllipseDiameter, ShapesVM.EllipseDiameter, Brushes.Gold, new Thickness(position.X - ShapesVM.EllipseRadius, position.Y - ShapesVM.EllipseRadius, 0, 0)));
                 foreach ((int, ShapesVM.Destination) id in ToolBarControls.ListID) {
                     switch (id.Item2) {
                         case ShapesVM.Destination.StartPoint:
-                            ShapesVM.ShapesInfoList[id.Item1]
-                            = new LineInfo(
-                            new Point(position.X, position.Y),
-                            ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).EndPoint,
-                            Brushes.Green,
-                            false);
+                            ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).StartPoint = new Point(position.X, position.Y);
                             break;
                         case ShapesVM.Destination.EndPoint:
-                            ShapesVM.ShapesInfoList[id.Item1]
-                            = new LineInfo(
-                            ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).StartPoint,
-                            new Point(position.X, position.Y),
-                            Brushes.Green,
-                            false);
+                            ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).EndPoint = new Point(position.X, position.Y);
                             break;
                     }
                 }

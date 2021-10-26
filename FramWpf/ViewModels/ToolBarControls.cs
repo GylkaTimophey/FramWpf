@@ -17,8 +17,8 @@ namespace FramWpf.ViewModel {
         public static void Clear() {
             ShapesVM.NodeList = new Dictionary<Point, List<(int, ShapesVM.Destination)>>();
             ShapesVM.ShapesInfoList.Clear();
-            ShapesVM.ShapesInfoList.Add(new EllipseInfo() { radius = ShapesVM.radius });
-            ShapesInfo.count = 1;
+            ShapesVM.ShapesInfoList.Add(new EllipseInfo());
+            ShapeInfo.count = 1;
         }
         #endregion
         #region DrawingButton
@@ -64,12 +64,13 @@ namespace FramWpf.ViewModel {
             currentLineInfo = new LineInfo(point, point, Brushes.Black);
             AddNode(point, ShapesVM.Destination.StartPoint);
             ShapesVM.ShapesInfoList.Add(currentLineInfo);
+            ShapesVM.ShapesInfoList.Add(new EllipseInfo(ShapesVM.EllipseDiameter, ShapesVM.EllipseDiameter, Brushes.Transparent, new Thickness(point.X - ShapesVM.EllipseRadius, point.Y - ShapesVM.EllipseRadius, 0, 0)));
         }
         private static void EndDrawing(Point point) {
             AddNode(point, ShapesVM.Destination.EndPoint);
             currentLineInfo.EndPoint = point;
             currentLineInfo.Brush = Brushes.Black;
-            ShapesVM.ShapesInfoList[currentLineInfo.Id] = new LineInfo(currentLineInfo);
+            ShapesVM.ShapesInfoList.Add(new EllipseInfo(ShapesVM.EllipseDiameter, ShapesVM.EllipseDiameter, Brushes.Transparent, new Thickness(point.X - ShapesVM.EllipseRadius, point.Y - ShapesVM.EllipseRadius, 0, 0)));
         }
         #endregion
         #region MoveButton
@@ -104,16 +105,13 @@ namespace FramWpf.ViewModel {
             }
         }
         public static void StartLineMoving(Line line) {
-            currentLineInfo = new LineInfo(new Point(line.X1, line.Y1), new Point(line.X2, line.Y2), Brushes.Green, false);
+            currentLineInfo = new LineInfo(new Point(line.X1, line.Y1), new Point(line.X2, line.Y2), Brushes.Green);
             currentId = Convert.ToInt32(line.Uid);
         }
         public static void EndLineMoving() {
-            ShapesVM.ShapesInfoList[currentId]
-                = new LineInfo(
-                    new Point(position.X - startDiff.X, position.Y - startDiff.Y),
-                    new Point(position.X - endDiff.X, position.Y - endDiff.Y),
-                    Brushes.Black,
-                    currentId);
+            ((LineInfo)ShapesVM.ShapesInfoList[currentId]).StartPoint = new Point(position.X - startDiff.X, position.Y - startDiff.Y);
+            ((LineInfo)ShapesVM.ShapesInfoList[currentId]).EndPoint = new Point(position.X - endDiff.X, position.Y - endDiff.Y);
+            ((LineInfo)ShapesVM.ShapesInfoList[currentId]).Brush = Brushes.Black;
             List<(int, ShapesVM.Destination)> list1 = ShapesVM.NodeList[currentLineInfo.StartPoint];
             List<(int, ShapesVM.Destination)> list2 = ShapesVM.NodeList[currentLineInfo.EndPoint];
             if (ShapesVM.NodeList[currentLineInfo.StartPoint].Count > 1) {
@@ -148,12 +146,12 @@ namespace FramWpf.ViewModel {
             }
             else if (!endNodeMoving) {
                 Ellipse ellipse = (Ellipse)sender;
-                StartNodeMoving(ellipse);
                 endNodeMoving = true;
+                StartNodeMoving(ellipse);
             }
         }
         public static void StartNodeMoving(Ellipse ellipse) {
-            ListID = ShapesVM.NodeList[new Point(ellipse.Margin.Left + ShapesVM.radius / 2, ellipse.Margin.Top + ShapesVM.radius / 2)];
+            ListID = ShapesVM.NodeList[new Point(ellipse.Margin.Left + ShapesVM.EllipseRadius, ellipse.Margin.Top + ShapesVM.EllipseRadius)];
         }
         public static void EndNodeMoving() {
         }
@@ -173,29 +171,31 @@ namespace FramWpf.ViewModel {
             }
         }
         public static void NodeCheck(Point position) {
+            for (int i = 0; i < ShapesVM.ShapesInfoList.Count; i++) {
+                if (ShapesVM.ShapesInfoList[i] is EllipseInfo) {
+                    Point tempPoint = new Point(((EllipseInfo)ShapesVM.ShapesInfoList[i]).Margin.Left + ShapesVM.EllipseRadius, ((EllipseInfo)ShapesVM.ShapesInfoList[i]).Margin.Top + ShapesVM.EllipseRadius);
+                    if (endDrawing && tempPoint.Equals(currentLineInfo.StartPoint)) {
+                        continue;
+                    }
+                    double XIndent = tempPoint.X - position.X;
+                    double YIndent = tempPoint.Y - position.Y;
+                    if (XIndent < 10 && XIndent > -10
+                        && YIndent < 10 && YIndent > -10) {
+                        ((EllipseInfo)ShapesVM.ShapesInfoList[i]).Brush = Brushes.Gold;
+                        node = true;
+                        NodePosition = tempPoint;
+                        return;
+
+                    }
+                    else {
+                        ((EllipseInfo)ShapesVM.ShapesInfoList[i]).Brush = Brushes.Transparent;
+                    }
+
+                }
+            }
             foreach (Point point in ShapesVM.NodeList.Keys) {
-                if (endDrawing && point.Equals(currentLineInfo.StartPoint)) {
-                    continue;
-                }
-                double XIndent = point.X - position.X;
-                double YIndent = point.Y - position.Y;
-                if (XIndent < 10 && XIndent > -10
-                    && YIndent < 10 && YIndent > -10) {
-                    ShapesVM.ShapesInfoList[0] = new EllipseInfo() {
-                        radius = ShapesVM.radius,
-                        margin = new Thickness(point.X - 10, point.Y - 10, 0, 0),
-                        brush = Brushes.Gold
-                    };
-                    node = true;
-                    NodePosition = point;
-                    return;
-                }
-                else {
-                    ShapesVM.ShapesInfoList[0] = new EllipseInfo() {
-                        radius = ShapesVM.radius,
-                        brush = Brushes.Transparent
-                    };
-                }
+
+
             }
             node = false;
         }

@@ -36,14 +36,14 @@
             <TextBlock Text="{Binding CursorPosition.PanelX, StringFormat='X={0}'}" Margin="0,0,0,-0.4" Width="86" />
             <TextBlock Text="{Binding CursorPosition.PanelY, StringFormat='y={0}'}" Margin="0,0,0,-0.4" Width="119" />
         </StackPanel>
-        <ItemsControl x:Name="Control1" ItemsSource="{Binding ShapesVM.ShapesInfoList}" Margin="10,0.2,9.6,9.6" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" >
+        <ItemsControl x:Name="Control1" ItemsSource="{Binding ShapesVM.ShapesList}" Margin="10,0.2,9.6,9.6" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" >
             <ItemsControl.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding MouseBehaviour.LeftClick}"/>
                 <KeyBinding Gesture="CTRL+Z" Command="{Binding MouseBehaviour.BackStep}"/>
             </ItemsControl.InputBindings>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas x:Name="WorkSpace" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown" Opacity="1">
+                    <Canvas x:Name="WorkSpace" Height="Auto" MouseRightButtonDown="WorkSpace_MouseRightButtonDown" Opacity="1" MouseWheel="WorkSpace_MouseWheel">
                         <Canvas.Background>
                             <ImageBrush ImageSource="./Pictures/1.jpg" Stretch="UniformToFill" Opacity="0.6" />
                         </Canvas.Background>
@@ -57,16 +57,16 @@
                     </Canvas>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.Resources>
-                <DataTemplate DataType="{x:Type local:EllipseInfo}">
-                    <Ellipse Height="{Binding radius}" Width="{Binding radius}" StrokeThickness="3" Fill="{Binding brush}" Margin="{Binding margin}" Cursor="Hand" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
-                </DataTemplate>
+            <!--<ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:LineInfo}">
                     <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y}"
                       X2="{Binding EndPoint.X}" Y2="{Binding EndPoint.Y}"
                       Stroke="{Binding Brush}" StrokeThickness="3" MouseDown="Line_MouseDown" Uid="{Binding Id}" Cursor="Hand"/>
                 </DataTemplate>
-            </ItemsControl.Resources>
+                <DataTemplate DataType="{x:Type local:EllipseInfo}">
+                    <Ellipse Height="{Binding radius}" Width="{Binding radius}" StrokeThickness="3" Fill="{Binding brush}" Margin="{Binding margin}" Cursor="Hand" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+                </DataTemplate>
+            </ItemsControl.Resources>-->
             <!--<ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Line X1="{Binding RoderLine.StartPoint.X}" Y1="{Binding RoderLine.StartPoint.Y}"
