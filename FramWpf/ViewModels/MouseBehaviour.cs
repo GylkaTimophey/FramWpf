@@ -116,6 +116,14 @@ namespace FramWpf.ViewModel {
                         Brushes.Red,
                         false);
             }
+            if (IsMoveChecked && ToolBarControls.pressed) {
+                double XIndent = position.X - ToolBarControls.startPosition.X;
+                double YIndent = position.Y - ToolBarControls.startPosition.Y;
+                if (XIndent < 10 && XIndent > -10
+                    && YIndent < 10 && YIndent > -10) {
+                    ToolBarControls.LineMoving(ToolBarControls.currentLine);
+                }
+            }
             if (IsMoveChecked && ToolBarControls.endLineMoving) {
                 ShapesVM.ShapesInfoList[ToolBarControls.currentId]
                     = new LineInfo(
@@ -143,7 +151,7 @@ namespace FramWpf.ViewModel {
                             Brushes.Green,
                             id.Item1);
                             break;
-                            
+
                     }
                     ShapesVM.ShapesInfoList[0] = new EllipseInfo() {
                         radius = ShapesVM.radius,

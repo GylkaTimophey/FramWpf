@@ -30,11 +30,19 @@ namespace FramWpf {
 
 
         private void Line_MouseDown(object sender, MouseButtonEventArgs e) {
-            ToolBarControls.LineMoving(sender);
+            
         }
 
         private void Ellipse_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
             ToolBarControls.NodeMoving(sender);
+        }
+
+        private void Line_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+            ToolBarControls.LineChoosing(sender, e.ButtonState);
+        }
+
+        private void Line_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+            ToolBarControls.LineChoosing(sender, e.ButtonState);
         }
     }
 }

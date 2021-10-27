@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -93,8 +94,10 @@ namespace FramWpf.ViewModel {
         }
         #endregion
         #region MoveButton
-
+        public static Line currentLine;
         public static bool endLineMoving;
+        public static bool pressed;
+        public static Point startPosition;
         public static Point startDiff;
         public static Point endDiff;
         public static int currentId;
@@ -104,8 +107,7 @@ namespace FramWpf.ViewModel {
                 return MouseBehaviour.IsMoveChecked;
             }
         }
-
-        public static void LineMoving(object sender) {
+        public static void LineChoosing(object sender, MouseButtonState buttonState) {
             if (!IsMoveChecked) {
                 return;
             }
@@ -113,13 +115,41 @@ namespace FramWpf.ViewModel {
                 EndNodeMoving();
                 return;
             }
-
-            if (endLineMoving) {
-                endLineMoving = false;
-                EndLineMoving();
-                return;
+            if (buttonState == MouseButtonState.Pressed) {
+                pressed = true;
+                startPosition = MouseBehaviour.position;
+                currentLine = (Line)sender;
             }
-            else if (!endLineMoving) {
+            else {
+                pressed = false;
+                double XIndent = MouseBehaviour.position.X - startPosition.X;
+                double YIndent = MouseBehaviour.position.Y - startPosition.Y;
+                if (XIndent < 10 && XIndent > -10
+                    && YIndent < 10 && YIndent > -10 && !endLineMoving) {
+                    for (int i = 1; i < ShapesVM.ShapesInfoList.Count; i++) {
+                        if (i == Convert.ToInt32(((Line)sender).Uid)) {
+                            continue;
+                        }
+                        ShapesVM.ShapesInfoList[i] = new LineInfo(((LineInfo)ShapesVM.ShapesInfoList[i]).StartPoint, ((LineInfo)ShapesVM.ShapesInfoList[i]).EndPoint, Brushes.Black, ((LineInfo)ShapesVM.ShapesInfoList[i]).Id);
+                    }
+                    ShapesVM.ShapesInfoList[Convert.ToInt32(((Line)sender).Uid)]
+                    = new LineInfo(
+                    ((LineInfo)ShapesVM.ShapesInfoList[Convert.ToInt32(((Line)sender).Uid)]).StartPoint,
+                    ((LineInfo)ShapesVM.ShapesInfoList[Convert.ToInt32(((Line)sender).Uid)]).EndPoint,
+                    Brushes.Aqua,
+                    Convert.ToInt32(((Line)sender).Uid));
+                    return;
+                }
+                if (endLineMoving) {
+                    endLineMoving = false;
+                    EndLineMoving();
+                    return;
+                }
+            }
+        }
+        public static void LineMoving(object sender) {
+
+            if (!endLineMoving) {
                 Line line = (Line)sender;
                 startDiff = new Point(position.X - line.X1, position.Y - line.Y1);
                 endDiff = new Point(position.X - line.X2, position.Y - line.Y2);
@@ -168,7 +198,7 @@ namespace FramWpf.ViewModel {
             }
             else if (!endNodeMoving) {
                 Ellipse tempEllipse = sender as Ellipse;
-                currentEllipse = new Ellipse() { Margin=tempEllipse.Margin, Width = tempEllipse.Width, Height = tempEllipse.Height, Fill=tempEllipse.Fill};
+                currentEllipse = new Ellipse() { Margin = tempEllipse.Margin, Width = tempEllipse.Width, Height = tempEllipse.Height, Fill = tempEllipse.Fill };
                 StartNodeMoving();
                 endNodeMoving = true;
             }
@@ -177,7 +207,7 @@ namespace FramWpf.ViewModel {
             ListID = ShapesVM.NodeList[new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2)];
         }
         public static void EndNodeMoving() {
-            ShapesVM.NodeList.Add(new Point(MouseBehaviour.position.X , MouseBehaviour.position.Y), ShapesVM.NodeList[new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2)]);
+            ShapesVM.NodeList.Add(new Point(MouseBehaviour.position.X, MouseBehaviour.position.Y), ShapesVM.NodeList[new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2)]);
             foreach (var ts in ShapesVM.NodeList[new Point(MouseBehaviour.position.X, MouseBehaviour.position.Y)]) {
                 ShapesVM.ShapesInfoList[ts.Item1] = new LineInfo(((LineInfo)ShapesVM.ShapesInfoList[ts.Item1]).StartPoint, ((LineInfo)ShapesVM.ShapesInfoList[ts.Item1]).EndPoint, Brushes.Black, ts.Item1);
             }
