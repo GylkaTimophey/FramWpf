@@ -33,9 +33,13 @@ namespace FramWpf.ViewModel {
         public DelegateCommand BackStep {
             get; set;
         }
+        public DelegateCommand LineDelete {
+            get; set;
+        }
 
         public MouseBehaviour() {
             BackStep = new DelegateCommand(UserEventHandler.BackStep);
+            LineDelete = new DelegateCommand(ToolBarControls.LineDelete);
             LeftClick = new DelegateCommand(ToolBarControls.Drawing);
             ClearButton = new DelegateCommand(ToolBarControls.Clear);
         }
@@ -121,11 +125,6 @@ namespace FramWpf.ViewModel {
                         ToolBarControls.currentId);
             }
             if (IsMoveChecked && ToolBarControls.endNodeMoving) {
-                ShapesVM.ShapesInfoList.Add( new EllipseInfo() {
-                    radius = ShapesVM.radius,
-                    margin = new Thickness(position.X - ShapesVM.radius / 2, position.Y - ShapesVM.radius / 2, 0, 0),
-                    brush = Brushes.Gold
-                });
                 foreach ((int, ShapesVM.Destination) id in ToolBarControls.ListID) {
                     switch (id.Item2) {
                         case ShapesVM.Destination.StartPoint:
@@ -134,7 +133,7 @@ namespace FramWpf.ViewModel {
                             new Point(position.X, position.Y),
                             ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).EndPoint,
                             Brushes.Green,
-                            false);
+                            id.Item1);
                             break;
                         case ShapesVM.Destination.EndPoint:
                             ShapesVM.ShapesInfoList[id.Item1]
@@ -142,9 +141,15 @@ namespace FramWpf.ViewModel {
                             ((LineInfo)ShapesVM.ShapesInfoList[id.Item1]).StartPoint,
                             new Point(position.X, position.Y),
                             Brushes.Green,
-                            false);
+                            id.Item1);
                             break;
+                            
                     }
+                    ShapesVM.ShapesInfoList[0] = new EllipseInfo() {
+                        radius = ShapesVM.radius,
+                        margin = new Thickness(position.X - 10, position.Y - 10, 0, 0),
+                        brush = Brushes.Gold
+                    };
                 }
             }
         }

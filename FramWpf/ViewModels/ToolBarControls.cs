@@ -18,7 +18,7 @@ namespace FramWpf.ViewModel {
             ShapesVM.NodeList = new Dictionary<Point, List<(int, ShapesVM.Destination)>>();
             ShapesVM.ShapesInfoList.Clear();
             ShapesVM.ShapesInfoList.Add(new EllipseInfo() { radius = ShapesVM.radius });
-            ShapesInfo.count = 1;
+            ShapeInfo.count = 1;
         }
         #endregion
         #region DrawingButton
@@ -72,6 +72,26 @@ namespace FramWpf.ViewModel {
             ShapesVM.ShapesInfoList[currentLineInfo.Id] = new LineInfo(currentLineInfo);
         }
         #endregion
+        #region LineDelete
+        public static void LineDelete() {
+            if (endLineMoving) {
+                endLineMoving = false;
+                ShapesVM.ShapesInfoList[currentId] = null;
+                if (ShapesVM.NodeList[currentLineInfo.StartPoint].Count > 1) {
+                    ShapesVM.NodeList[currentLineInfo.StartPoint].Remove((currentId, ShapesVM.Destination.StartPoint));
+                }
+                else {
+                    ShapesVM.NodeList.Remove(currentLineInfo.StartPoint);
+                }
+                if (ShapesVM.NodeList[currentLineInfo.EndPoint].Count > 1) {
+                    ShapesVM.NodeList[currentLineInfo.EndPoint].Remove((currentId, ShapesVM.Destination.EndPoint));
+                }
+                else {
+                    ShapesVM.NodeList.Remove(currentLineInfo.EndPoint);
+                }
+            }
+        }
+        #endregion
         #region MoveButton
 
         public static bool endLineMoving;
@@ -86,7 +106,11 @@ namespace FramWpf.ViewModel {
         }
 
         public static void LineMoving(object sender) {
-            if (!IsMoveChecked || endNodeMoving) {
+            if (!IsMoveChecked) {
+                return;
+            }
+            if (endNodeMoving) {
+                EndNodeMoving();
                 return;
             }
 
@@ -137,25 +161,28 @@ namespace FramWpf.ViewModel {
         #region NodeMoving
         public static List<(int, ShapesVM.Destination)> ListID;
         public static bool endNodeMoving;
+        public static Ellipse currentEllipse;
         public static void NodeMoving(object sender) {
             if (!IsMoveChecked || endLineMoving) {
                 return;
             }
-
-            if (endNodeMoving) {
-                endNodeMoving = false;
-                EndNodeMoving();
-            }
             else if (!endNodeMoving) {
-                Ellipse ellipse = (Ellipse)sender;
-                StartNodeMoving(ellipse);
+                Ellipse tempEllipse = sender as Ellipse;
+                currentEllipse = new Ellipse() { Margin=tempEllipse.Margin, Width = tempEllipse.Width, Height = tempEllipse.Height, Fill=tempEllipse.Fill};
+                StartNodeMoving();
                 endNodeMoving = true;
             }
         }
-        public static void StartNodeMoving(Ellipse ellipse) {
-            ListID = ShapesVM.NodeList[new Point(ellipse.Margin.Left + ShapesVM.radius / 2, ellipse.Margin.Top + ShapesVM.radius / 2)];
+        public static void StartNodeMoving() {
+            ListID = ShapesVM.NodeList[new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2)];
         }
         public static void EndNodeMoving() {
+            ShapesVM.NodeList.Add(new Point(MouseBehaviour.position.X , MouseBehaviour.position.Y), ShapesVM.NodeList[new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2)]);
+            foreach (var ts in ShapesVM.NodeList[new Point(MouseBehaviour.position.X, MouseBehaviour.position.Y)]) {
+                ShapesVM.ShapesInfoList[ts.Item1] = new LineInfo(((LineInfo)ShapesVM.ShapesInfoList[ts.Item1]).StartPoint, ((LineInfo)ShapesVM.ShapesInfoList[ts.Item1]).EndPoint, Brushes.Black, ts.Item1);
+            }
+            ShapesVM.NodeList.Remove(new Point(currentEllipse.Margin.Left + ShapesVM.radius / 2, currentEllipse.Margin.Top + ShapesVM.radius / 2));
+            endNodeMoving = false;
         }
         #endregion
         #region NodeWorking

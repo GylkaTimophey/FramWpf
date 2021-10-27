@@ -34,12 +34,11 @@
         <!--<Line X2="400" Stroke="Brown" StrokeThickness="12"/>-->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,10.4,9.6,10" Grid.Row="2">
             <TextBlock Text="{Binding CursorPosition.PanelX, StringFormat='X={0}'}" Margin="0,0,0,-0.4" Width="86" />
-            <TextBlock Text="{Binding CursorPosition.PanelY, StringFormat='y={0}'}" Margin="0,0,0,-0.4" Width="119" />
+            <TextBlock Text="{Binding CursorPosition.PanelY, StringFormat='y={0}'}" Margin="0,0,0,-0.4" Width="119"/>
         </StackPanel>
-        <ItemsControl x:Name="Control1" ItemsSource="{Binding ShapesVM.ShapesInfoList}" Margin="10,0.2,9.6,9.6" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" >
+        <ItemsControl x:Name="Control1" ItemsSource="{Binding ShapesVM.ShapesInfoList}" Margin="10,0.2,9.6,9.6" Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}">
             <ItemsControl.InputBindings>
                 <MouseBinding Gesture="LeftClick" Command="{Binding MouseBehaviour.LeftClick}"/>
-                <KeyBinding Gesture="CTRL+Z" Command="{Binding MouseBehaviour.BackStep}"/>
             </ItemsControl.InputBindings>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -59,7 +58,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:EllipseInfo}">
-                    <Ellipse Height="{Binding radius}" Width="{Binding radius}" StrokeThickness="3" Fill="{Binding brush}" Margin="{Binding margin}" Cursor="Hand" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown" />
+                    <Ellipse Height="{Binding radius}" Width="{Binding radius}" StrokeThickness="3" Fill="{Binding brush}" Margin="{Binding margin}" Cursor="Hand" MouseLeftButtonDown="Ellipse_MouseLeftButtonDown"/>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:LineInfo}">
                     <Line X1="{Binding StartPoint.X}" Y1="{Binding StartPoint.Y}"
@@ -78,5 +77,6 @@
     </Grid>
     <Window.InputBindings>
         <KeyBinding Gesture="CTRL+Z" Command="{Binding MouseBehaviour.BackStep}"/>
+        <KeyBinding Gesture="Delete" Command="{Binding MouseBehaviour.LineDelete}"/>
     </Window.InputBindings>
 </Window>

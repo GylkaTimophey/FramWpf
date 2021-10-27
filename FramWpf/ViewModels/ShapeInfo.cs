@@ -12,13 +12,13 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 namespace FramWpf.ViewModel {
-    public class ShapesInfo : BindableBase {
+    public class ShapeInfo : BindableBase {
         internal static int count = 1;
         public int Id {
             get; set;
         }
     }
-    public class LineInfo : ShapesInfo {
+    public class LineInfo : ShapeInfo {
         #region constructors
         internal LineInfo() {
             Id = count++;
@@ -74,7 +74,7 @@ namespace FramWpf.ViewModel {
         }
         #endregion
     }
-    public class EllipseInfo : ShapesInfo {
+    public class EllipseInfo : ShapeInfo {
         #region properties
         public double radius {
             get; set;

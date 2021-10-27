@@ -89,7 +89,7 @@
     <Compile Include="ViewModels\MouseBehaviour.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ShapesVM.cs" />
-    <Compile Include="ViewModels\ShapesInfo.cs" />
+    <Compile Include="ViewModels\ShapeInfo.cs" />
     <Compile Include="ViewModels\CursorPosition.cs" />
     <Compile Include="ViewModels\ToolBarControls.cs" />
     <Compile Include="ViewModels\UserEventHandler.cs" />

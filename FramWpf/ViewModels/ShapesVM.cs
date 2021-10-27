@@ -35,7 +35,7 @@ namespace FramWpf.ViewModel {
             //lineList.Add(new RoderLine(new Point(200, 200), new Point(0, 200), Brushes.DarkGreen));
 
         }
-        public static ObservableCollection<ShapesInfo> ShapesInfoList => Class1.myValues;
+        public static ObservableCollection<ShapeInfo> ShapesInfoList => Class1.myValues;
         public enum Destination {
         StartPoint,EndPoint}
 
