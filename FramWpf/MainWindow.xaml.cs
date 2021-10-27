@@ -21,13 +21,15 @@ namespace FramWpf {
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        int a = 0;
+        Random r = new Random();
         public MainWindow() {
             InitializeComponent();
+            for (int i = 0; i < 50; i++) {
+                ShapesVM.ShapesInfoList.Add(new LineInfo(new Point(i * 15.6, 0), new Point(i * 15.6, 400), Brushes.Violet));
+            }
         }
 
         private void WorkSpace_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
-           
             var A = Control1;
         }
 
@@ -36,38 +38,7 @@ namespace FramWpf {
         }
 
         private void WorkSpace_MouseWheel(object sender, MouseWheelEventArgs e) {
-            if (a < 50) {
-                ShapesVM.ShapesInfoList.Add(new LineInfo(new Point(a * 15.6, 0), new Point(a * 15.6, 400), Brushes.Violet));
-                a++;
-            }
-            else if(a < 100) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 50]).Brush = Brushes.Gray;
-                a++;
-            }
-            else if (a < 150) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 100]).Brush = Brushes.GreenYellow;
-                a++;
-            }
-            else if (a < 200) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 150]).Brush = Brushes.Crimson;
-                a++;
-            }
-            else if (a < 250) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 200]).Brush = Brushes.SteelBlue;
-                a++;
-            }
-            else if (a < 300) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 250]).Brush = Brushes.BlueViolet;
-                a++;
-            }
-            else if (a < 350) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 300]).Brush = Brushes.Goldenrod;
-                a++;
-            }
-            else if (a < 400) {
-                ((LineInfo)ShapesVM.ShapesInfoList[a - 350]).Brush = Brushes.Fuchsia;
-                a++;
-            }
+            ((LineInfo)ShapesVM.ShapesInfoList[r.Next(0, 50)]).Brush = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 255), (byte)r.Next(1, 255), (byte)r.Next(1, 255)));
         }
     }
 }
